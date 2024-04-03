@@ -9,7 +9,7 @@ const ChatApp = () => {
   useEffect(() => {
     // Function to translate text using Google Translate API
     const translateText = async () => {
-      const apiKey = 'AIzaSyBxlhgsdvPlg3dKaBYv9xxlzEUAik6Wn0A';
+      const apiKey = '';
       const response = await fetch(
         `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`,
         {
