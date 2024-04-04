@@ -18,6 +18,20 @@ const roomSchema = new Schema({
             ref: 'Message',
         },
     ],
+    senderDesiredLanguage: {
+        type: Schema.Types.ObjectId,
+        ref: 'Language',
+    },
+    receiverDesiredLanguages: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Language',
+        },
+    ],
+    Notification: {
+        type: Schema.Types.ObjectId,
+        ref: 'Notification',
+    },
 });
 
 const Room = mongoose.model('Room', roomSchema);

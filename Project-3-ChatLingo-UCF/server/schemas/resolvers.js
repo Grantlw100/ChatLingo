@@ -1,5 +1,6 @@
-const { User, Message, Room, ContactList, Group, Translation } = require('../models');
+const { User, Message, Room, ContactList, Group, Translation, Notification } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
+const { translateText } = require('../utils/translate');
 
 const resolvers = {
   Query: {
@@ -97,33 +98,48 @@ const resolvers = {
         }
 
         throw new AuthenticationError('You need to be logged in!');
-        },
-        addGroup: async (parent, args) => {
-            const group = await Group.create(args);
-            return group;
-        },
-        addMessage: async (parent, { message, roomId }, context) => {
-            if (context.user) {
-              const message = await Message.create({ message, roomId, sender: context.user._id });
-              return message;
-            } else {
-            throw new AuthenticationError('You need to be logged in!');
-            }
-        },          
-        addRoom: async (parent, args) => {
-            const room = await Room.create(args);
-            return room;
-        },
-        addTranslation: async (parent, args) => {
-            const translation = await Translation.create(args);
-            return translation;
-        },
     },
-    Subscription: {
-        messageAdded: {
-          subscribe: () => pubsub.asyncIterator(['MESSAGE_ADDED']),
-        },
-      },      
+    addGroup: async (parent, args) => {
+        const group = await Group.create(args);
+        return group;
+    },
+    addMessage: async (parent, { messageContent, roomId }, context) => {
+        if (!context.user) {
+            throw new AuthenticationError('You need to be logged in!');
+        }
+        
+        const room = await Room.findById(roomId);
+        if (!room) {
+            throw new Error('Room not found');
+        }
+        
+        const targetLang = room.targetLang; 
+        
+        const { originalText, translatedText } = await translateText(messageContent, targetLang);
+        
+        const newMessage = await Message.create({
+            originalContent: originalText,
+            translationContent: translatedText,
+            sender: context.user._id,
+            room: roomId,
+        });
+        
+        return newMessage;
+    },         
+    addRoom: async (parent, args) => {
+        const room = await Room.create(args);
+        return room;
+    },
+    addTranslation: async (parent, args) => {
+        const translation = await Translation.create(args);
+        return translation;
+    },
+},
+Subscription: {
+    messageAdded: {
+        subscribe: () => pubsub.asyncIterator(['MESSAGE_ADDED']),
+    },
+    },      
 };
 
 

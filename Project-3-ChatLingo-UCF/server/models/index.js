@@ -11,6 +11,7 @@ module.exports = {
     Room,
     ContactList,
     Group,
-    Translation
+    Translation,
+    Notification
 }
 

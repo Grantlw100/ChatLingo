@@ -2,12 +2,8 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const messageSchema = new Schema({
-    originalContent: {
-        type: String,
-        required: true,
-    },
-    translationContent: {
+const notificationSchema = new Schema({
+    message: {
         type: String,
         required: true,
     },
@@ -21,21 +17,20 @@ const messageSchema = new Schema({
         ref: 'User',
         required: true,
     },
-    room: {
-        type: Schema.Types.ObjectId,
-        ref: 'Room',
-        required: true,
-    },
-    translation: {
-        type: Schema.Types.ObjectId,
-        ref: 'Translation',
-    },
     timestamp: {
         type: Date,
         default: Date.now,
     },
+    room: {
+        type: Schema.Types.ObjectId,
+        ref: 'Room',
+    },
+    read: {
+        type: Boolean,
+        default: false,
+    },
 });
 
-const Message = mongoose.model('Message', messageSchema);
+const Notification = mongoose.model('Notification', notificationSchema);
 
-module.exports = Message;
+module.exports = Notification;

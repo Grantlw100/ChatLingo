@@ -5,7 +5,6 @@ const typeDefs = `
         firstName: String
         lastName: String
         email: String
-        friends: [User]
         groups: [Group]
         messages: [Message]
         translations: [Translation]
@@ -15,7 +14,8 @@ const typeDefs = `
     }
     type Message {
         _id: ID
-        messageContent: String
+        originalContent: String
+        translationContent: String
         sender: User
         receiver: User
         room: Room
@@ -27,6 +27,9 @@ const typeDefs = `
         name: String
         users: [User]
         messages: [Message]
+        senderDesiredLanguage: String
+        receiverDesiredLanguages: [String]
+        Notification: Notification
     }
     
     type ContactList {
@@ -39,15 +42,25 @@ const typeDefs = `
         _id: ID
         name: String
         users: [User]
-        messages: [Message]
     }
     
     type Translation {
         _id: ID
-        original: String
-        translation: String
-        user: User
-        languageToLanguage: String
+        senderDesiredLanguage: String
+        senderId: User
+        receiverDesiredLanguage: String
+        receiverId: User
+        timestamp: String
+    }
+
+    type Notification {
+        _id: ID
+        message: Message
+        sender: User
+        receiver: User
+        timestamp: String
+        room: Room
+        read: Boolean
     }
     
     type Auth {
@@ -69,16 +82,31 @@ const typeDefs = `
         group(_id: ID!): Group
         translations: [Translation]
         translation(_id: ID!): Translation
+        notifications: [Notification]
+        notification(_id: ID!): Notification
     }
 
     type Mutation {
         login(email: String!, password: String!): Auth
         addUser(username: String!, firstName: String!, lastName: String!, email: String!, password: String!): Auth
-        addFriend(friendId: ID!): User
+        updateUser(username: String, firstName: String, lastName: String, email: String, password: String): User
+        deleteUser(_id: ID!): User
+        addContactList: ContactList
+        addContact(contact: ID!): ContactList
+        removeContact(contact: ID!): ContactList
         addGroup(name: String!): Group
+        removeGroup(group: ID!): User
+        addToGroup(group: ID!): Group
+        removeFromGroup(group: ID!): Group
         addMessage(message: String!, roomId: ID!): Message
+        deleteMessage(_id: ID!): Message
+        deleteMessages(roomId: ID!): Room
         addRoom(name: String!): Room
+        deleteRoom(_id: ID!): Room
         addTranslation(original: String!, translation: String!): Translation
+        deleteTranslation(_id: ID!): Translation
+        addNotification(message: ID!, sender: ID!, receiver: ID!, room: ID!): Notification
+        deleteNotification(_id: ID!): Notification
     }
 
     type Subscription {
