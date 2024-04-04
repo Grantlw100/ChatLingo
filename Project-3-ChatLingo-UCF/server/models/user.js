@@ -39,12 +39,6 @@ const userSchema = new Schema({
             message: props => `${props.value} is not a valid password!`
         },
     },
-    friends: [
-        {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        },
-    ],
     groups: [
         {
         type: Schema.Types.ObjectId,
@@ -72,10 +66,13 @@ const userSchema = new Schema({
         default: 'light',
     },
     language: {
-        type: String,
-        default: 'en',
+        type: Schema.Types.ObjectId,
+        ref: 'Language',
     },
-
+    notification: {
+        type: Schema.Types.ObjectId,
+        ref: 'Notification',
+    },
 }, {
     timestamps: true,
     });

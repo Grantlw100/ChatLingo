@@ -2,19 +2,20 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const translationSchema = new Schema({
-    original: {
-        type: String,
+    senderDesiredLanguage: {
+        type: Schema.Types.ObjectId,
+        ref: 'Language',
+    },
+    senderId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
     },
-    translation: {
-        type: String,
-        required: true,
+    receiverDesiredLanguage: {
+        type: Schema.Types.ObjectId,
+        ref: 'Language',
     },
-    languageToLanguage: {
-        type: String,
-        required: true,
-    },
-    user: {
+    receiverId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,

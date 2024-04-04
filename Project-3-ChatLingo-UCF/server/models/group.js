@@ -12,12 +12,10 @@ const groupSchema = new Schema({
         ref: 'User',
         },
     ],
-    messages: [
-        {
+    room: {
         type: Schema.Types.ObjectId,
-        ref: 'Message',
-        },
-    ],
+        ref: 'Room',
+    },
     });
 
 const Group = mongoose.model('Group', groupSchema);

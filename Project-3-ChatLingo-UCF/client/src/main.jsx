@@ -11,6 +11,7 @@ import Settings from './pages/settings';
 import About from './pages/about';
 import Logout from './pages/logout';
 import Help from './pages/help';
+import ChatApp from './pages/react'
 
 
 const router = createBrowserRouter([
@@ -24,6 +25,9 @@ const router = createBrowserRouter([
       }, {
         path: '/login',
         element: <Login />
+      },{
+        path: '/chatapp',
+        element: <ChatApp />
       }, {
         path: '/signup',
         element: <Signup />

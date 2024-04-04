@@ -16,6 +16,10 @@ function Signup(props) {
         password: formState.password,
         firstName: formState.firstName,
         lastName: formState.lastName,
+        username: formState.username,
+        phone: formState.phone,
+        desiredLanguage: formState.language
+
       },
     });
     const token = mutationResponse.data.addUser.token;
@@ -28,6 +32,14 @@ function Signup(props) {
       ...formState,
       [name]: value,
     });
+  };
+
+  const verifyPassword = () => {
+    if (formState.password === formState.confirmPassword) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -57,6 +69,16 @@ function Signup(props) {
           />
         </div>
         <div className="flex-row space-between my-2">
+          <label htmlFor="username">Username:</label>
+          <input
+            placeholder="username"
+            name="username"
+            type="username"
+            id="username"
+            onChange={handleChange}
+            />
+        </div>
+        <div className="flex-row space-between my-2">
           <label htmlFor="email">Email:</label>
           <input
             placeholder="youremail@test.com"
@@ -73,7 +95,9 @@ function Signup(props) {
             name="password"
             type="password"
             id="pwd"
-            onChange={handleChange}
+            onChange={
+              verifyPassword() ? handleChange : () => console.log('Passwords do not match!')
+            }
           />
         </div>
         <div className="flex-row space-between my-2">
@@ -98,7 +122,11 @@ function Signup(props) {
         </div>
         <div className="flex-row space-between my-2">
             <label htmlFor="Desired Language">Choose your Primary Language:</label>
-            <select>
+            <select
+                name="language"
+                id="language"
+                onChange={handleChange}
+            >
                 <option value="en">English</option>
                 <option value="es">Spanish</option>
                 <option value="fr">French</option>
