@@ -21,5 +21,3 @@ const groupSchema = new Schema({
 const Group = mongoose.model('Group', groupSchema);
 
 module.exports = Group;
-
-// Path: Project-3-ChatLingo-UCF/server/models/message.js

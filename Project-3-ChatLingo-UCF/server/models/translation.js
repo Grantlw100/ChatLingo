@@ -20,6 +20,10 @@ const translationSchema = new Schema({
         ref: 'User',
         required: true,
     },
+    translationMessgae: {
+        type: String,
+        required: true,
+    },
     timestamp: {
         type: Date,
         default: Date.now,
