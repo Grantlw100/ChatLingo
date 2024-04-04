@@ -1,6 +1,7 @@
 const { User, Message, Room, ContactList, Group, Translation, Notification } = require('../models');
 const { signToken, AuthenticationError } = require('../utils/auth');
 const { translateText } = require('../utils/translate');
+const { lang2lang } = require('../utils/translationMessage');
 
 const resolvers = {
   Query: {
@@ -103,29 +104,31 @@ const resolvers = {
         const group = await Group.create(args);
         return group;
     },
-    addMessage: async (parent, { messageContent, roomId }, context) => {
+    addMessage: async (parent, { messageContent, roomId, userIds }, context) => {
         if (!context.user) {
             throw new AuthenticationError('You need to be logged in!');
         }
-        
-        const room = await Room.findById(roomId);
-        if (!room) {
-            throw new Error('Room not found');
+
+        const users = await User.find({_id: {$in: userIds}});
+        const languageSet = new Set(users.map(user => user.preferredLanguage));
+
+        const translations = {};
+        for (let lang of languageSet) {
+            translations[lang] = await translateText(messageContent, lang);
         }
-        
-        const targetLang = room.targetLang; 
-        
-        const { originalText, translatedText } = await translateText(messageContent, targetLang);
-        
-        const newMessage = await Message.create({
-            originalContent: originalText,
-            translationContent: translatedText,
+
+        const messages = users.map(user => ({
+            originalContent: messageContent,
+            translationContent: translations[user.preferredLanguage],
             sender: context.user._id,
+            receiver: user._id,
             room: roomId,
-        });
-        
-        return newMessage;
-    },         
+        }));
+
+        await Message.insertMany(messages);
+
+        },
+    
     addRoom: async (parent, args) => {
         const room = await Room.create(args);
         return room;

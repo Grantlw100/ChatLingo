@@ -9,9 +9,10 @@ const typeDefs = `
         messages: [Message]
         translations: [Translation]
         colorTheme: String
-        language: String
+        language: [Language]
         contactList: [ContactList]
     }
+    
     type Message {
         _id: ID
         originalContent: String
@@ -27,9 +28,9 @@ const typeDefs = `
         name: String
         users: [User]
         messages: [Message]
-        senderDesiredLanguage: String
-        receiverDesiredLanguages: [String]
-        Notification: Notification
+        senderDesiredLanguage: Language
+        receiverDesiredLanguages: [Language]
+        Notification: [Notification]
     }
     
     type ContactList {
@@ -46,10 +47,11 @@ const typeDefs = `
     
     type Translation {
         _id: ID
-        senderDesiredLanguage: String
+        senderDesiredLanguage: Language
         senderId: User
-        receiverDesiredLanguage: String
+        receiverDesiredLanguage: Language
         receiverId: User
+        translationMessage: String
         timestamp: String
     }
 
@@ -84,6 +86,8 @@ const typeDefs = `
         translation(_id: ID!): Translation
         notifications: [Notification]
         notification(_id: ID!): Notification
+        languages: [Language]
+        language(_id: ID!): Language
     }
 
     type Mutation {
