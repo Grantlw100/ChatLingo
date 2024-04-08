@@ -18,7 +18,7 @@ function Signup(props) {
         lastName: formState.lastName,
         username: formState.username,
         phone: formState.phone,
-        desiredLanguage: formState.language
+        Language: formState.language
 
       },
     });
