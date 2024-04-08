@@ -4,7 +4,7 @@ const FootBar = () => {
     return (
         <div id="footBar">
             <div className="footBarContent">
-                <p>© 2021 ChatLingo</p>
+                <p>© 2024 ChatLingo</p>
                 <p>Privacy Policy</p>
                 <p>Terms of Service</p>
             </div>
