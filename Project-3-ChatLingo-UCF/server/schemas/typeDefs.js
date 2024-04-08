@@ -49,6 +49,18 @@ const typeDefs = `
         translationMessage: String
         timestamp: String
     }
+    type Language {
+        _id: ID
+        name: String
+        code: String
+        flag: String
+    }
+    enum NotificationType {
+        GROUP
+        CONTACT
+        ROOM
+        MESSAGE
+    }
     type Notification {
         _id: ID
         message: Message
@@ -86,7 +98,7 @@ const typeDefs = `
     }
 
     type Mutation {
-        login(email: String!, password: String!): Auth done
+        login(email: String!, password: String!): Auth 
         addUser(username: String!, firstName: String!, lastName: String!, email: String!, password: String!): Auth
         updateUser(username: String, firstName: String, lastName: String, email: String, password: String): User
         deleteUser(_id: ID!): User
@@ -107,7 +119,6 @@ const typeDefs = `
         addNotification(message: ID!, sender: ID!, receiver: ID!, room: ID!): Notification
         deleteNotification(_id: ID!): Notification
     }
-
     type Subscription {
         messageAdded(roomId: ID!): Message
     }

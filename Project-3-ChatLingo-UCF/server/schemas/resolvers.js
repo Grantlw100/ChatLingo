@@ -33,35 +33,42 @@ const resolvers = {
         });
     },
     messages: async () => {
-        return Message.find().populate('sender');
+        return Message.find().populate('sender').populate('receiver').populate('room');
     },
     message: async (parent, { _id }) => {
-        return Message.findById(_id).populate('sender');
+        return Message.findOne({ _id }).populate('sender').populate('receiver').populate('room');
     },
     rooms: async () => {
-        return Room.find().populate('users');
+        return Room.find().populate('users').populate('messages').populate('Notification');
     },
     room: async (parent, { _id }) => {
-        return Room.findById(_id).populate('users');
+        return Room.findOne({ _id }).populate('users').populate('messages').populate('Notification');
+    },
+    contactList: async () => {
+        return ContactList.find().populate('user').populate('contacts');
     },
     contactLists: async () => {
-        return ContactList.find().populate('contacts');
-    },
-    contactList: async (parent, { _id }) => {
-        return ContactList.findById(_id).populate('contacts');
+        return ContactList.find().populate('user').populate('contacts');
     },
     groups: async () => {
         return Group.find().populate('users');
     },
-    group: async (parent, { _id }) => {
-        return Group.findById(_id).populate('users');
-    },
     translations: async () => {
-        return Translation.find().populate('user');
+        return Translation.find().populate('senderId').populate('receiverId');
+    },
+    notification: async (parent, { _id }) => {
+        return Notification.findOne({ _id }).populate('message').populate('sender').populate('receiver').populate('room');
+    },
+    notifications: async () => {
+        return Notification.find().populate('message').populate('sender').populate('receiver').populate('room');
+    },
+    group: async (parent, { _id }) => {
+        return Group.findOne({ _id }).populate('users');
     },
     translation: async (parent, { _id }) => {
-        return Translation.findById(_id).populate('user');
+        return Translation.findOne({ _id }).populate('senderId').populate('receiverId');
     },
+    
 },
   Mutation: {
     login: async (parent, { email, password }) => {

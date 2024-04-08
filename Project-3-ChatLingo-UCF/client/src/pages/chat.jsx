@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    // Function to fetch messages from the server
     const fetchMessages = async () => {
       try {
-        // Make a GET request to fetch messages
         const response = await axios.get('/api/messages');
-        // Set the messages state with the fetched messages
         setMessages(response.data);
       } catch (error) {
         console.error('Error fetching messages:', error);
