@@ -12,7 +12,6 @@ const typeDefs = `
         language: [Language]
         contactList: [ContactList]
     }
-    
     type Message {
         _id: ID
         originalContent: String
@@ -22,7 +21,6 @@ const typeDefs = `
         room: Room
         translation: Translation
     }
-    
     type Room {
         _id: ID
         name: String
@@ -32,19 +30,16 @@ const typeDefs = `
         receiverDesiredLanguages: [Language]
         Notification: [Notification]
     }
-    
     type ContactList {
         _id: ID
         user: User
         contacts: [User]
     }
-    
     type Group {
         _id: ID
         name: String
         users: [User]
     }
-    
     type Translation {
         _id: ID
         senderDesiredLanguage: Language
@@ -54,7 +49,6 @@ const typeDefs = `
         translationMessage: String
         timestamp: String
     }
-
     type Notification {
         _id: ID
         message: Message
@@ -63,6 +57,7 @@ const typeDefs = `
         timestamp: String
         room: Room
         read: Boolean
+        type: String
     }
     
     type Auth {
@@ -91,7 +86,7 @@ const typeDefs = `
     }
 
     type Mutation {
-        login(email: String!, password: String!): Auth
+        login(email: String!, password: String!): Auth done
         addUser(username: String!, firstName: String!, lastName: String!, email: String!, password: String!): Auth
         updateUser(username: String, firstName: String, lastName: String, email: String, password: String): User
         deleteUser(_id: ID!): User

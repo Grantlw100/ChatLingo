@@ -17,6 +17,9 @@ const notificationSchema = new Schema({
         ref: 'User',
         required: true,
     },
+    type: {
+        type: String,
+    },
     timestamp: {
         type: Date,
         default: Date.now,
