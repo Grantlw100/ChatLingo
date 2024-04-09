@@ -11,55 +11,78 @@ export const LOGIN = gql`
   }
 `;
 
+export const LOGOUT = gql`
+  mutation logout {
+    logout 
+  }
+`;
+
 
 export const ADD_USER = gql`
-  mutation addUser(
-    $firstName: String!
-    $lastName: String!
-    $email: String!
-    $password: String!
+mutation addUser(
+  $username: String!
+  $firstName: String!
+  $lastName: String!
+  $email: String!
+  $password: String!
+  $colorTheme: String
+  $languageCode: String
+) {
+  addUser(
+    username: $username
+    firstName: $firstName
+    lastName: $lastName
+    email: $email
+    password: $password
+    colorTheme: $colorTheme
+    languageCode: $languageCode
   ) {
-    addUser(
-      firstName: $firstName
-      lastName: $lastName
-      email: $email
-      password: $password
-    ) {
-      token
-      user {
+    token
+    user {
+      _id
+      username
+      email
+      colorTheme
+      language {
         _id
+        code
       }
     }
   }
+}
 `;
 
 export const UPDATE_USER = gql`
-  mutation updateUser(
-    $firstName: String
-    $lastName: String
-    $email: String
-    $password: String
+mutation updateUser(
+  $username: String
+  $firstName: String
+  $lastName: String
+  $email: String
+  $password: String
+  $colorTheme: String
+  $languageCode: String
+) {
+  updateUser(
+    username: $username
+    firstName: $firstName
+    lastName: $lastName
+    email: $email
+    password: $password
+    colorTheme: $colorTheme
+    languageCode: $languageCode
   ) {
-    updateUser(
-      firstName: $firstName
-      lastName: $lastName
-      email: $email
-      password: $password
-    ) {
-      _id
-      firstName
-      lastName
-      email
+    _id
+    username
+    firstName
+    lastName
+    email
+    colorTheme
+    language {
+      code
+      name
     }
   }
-`;
-
-export const DELETE_USER = gql`
-  mutation deleteUser {
-    deleteUser {
-      _id
-    }
-  }
+}
 `;
 
 export const ADD_CONTACT_LIST = gql`
@@ -74,11 +97,18 @@ export const ADD_CONTACT = gql`
   mutation addContact($contactId: ID!) {
     addContact(contactId: $contactId) {
       _id
-      username
-      email
+      user {
+        _id
+        username
+      }
+      contacts {
+        _id
+        username
+      }
     }
   }
 `;
+
 
 export const REMOVE_CONTACT = gql`
   mutation removeContact($contactId: ID!) {

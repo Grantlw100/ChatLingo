@@ -1,6 +1,4 @@
 // utils/notificationHelpers.js
-const Notification = require('../models/Notification'); // Adjust the path as necessary
-
 async function createNotification({ message, senderId, receiverId, roomId, type }) {
     type = req.body.type;
     switch  (type) {

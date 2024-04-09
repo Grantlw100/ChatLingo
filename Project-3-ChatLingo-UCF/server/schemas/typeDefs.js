@@ -8,9 +8,10 @@ const typeDefs = `
         groups: [Group]
         messages: [Message]
         translations: [Translation]
+        notifications: [Notification]
+        contactList: ContactList
         colorTheme: String
-        language: [Language]
-        contactList: [ContactList]
+        language: Language
     }
     type Message {
         _id: ID
@@ -39,6 +40,7 @@ const typeDefs = `
         _id: ID
         name: String
         users: [User]
+        rooms: Room
     }
     type Translation {
         _id: ID
@@ -74,7 +76,7 @@ const typeDefs = `
     
     type Auth {
         token: ID!
-        user: User
+        user: User!
     }
 
     type Query {
@@ -99,11 +101,12 @@ const typeDefs = `
 
     type Mutation {
         login(email: String!, password: String!): Auth 
-        addUser(username: String!, firstName: String!, lastName: String!, email: String!, password: String!): Auth
-        updateUser(username: String, firstName: String, lastName: String, email: String, password: String): User
+        logout: Boolean
+        addUser(username: String!, firstName: String!, lastName: String!, email: String!, password: String!, colorTheme: String, languageCode: String ): Auth
+        updateUser( username: String, firstName: String, lastName: String, email: String, password: String, colorTheme: String, languageCode: String ): User          
         deleteUser(_id: ID!): User
         addContactList: ContactList
-        addContact(contact: ID!): ContactList
+        addContact(contactId: ID!): ContactList
         removeContact(contact: ID!): ContactList
         addGroup(name: String!): Group
         removeGroup(group: ID!): User

@@ -16,7 +16,7 @@ const groupSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Room',
     },
-    });
+});
 
 const Group = mongoose.model('Group', groupSchema);
 

@@ -1,60 +1,77 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import { QUERY_ME } from '../utils/queries';
+import { ADD_MESSAGE } from '../utils/mutations';
 
 const Chat = () => {
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
+    const [selectedContact, setSelectedContact] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get('/api/messages');
-        setMessages(response.data);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
+    const { data: userData, loading, error } = useQuery(QUERY_ME);
+
+    const contacts = userData?.me.contactList.contacts || [];
+    const userMessages = userData?.me.messages || [];
+
+    useEffect(() => {
+        if (selectedContact) {
+            const filteredMessages = userMessages.filter(
+                (message) => message.receiver.username === selectedContact.username || message.sender.username === selectedContact.username
+            );
+            setMessages(filteredMessages);
+        }
+    }, [selectedContact, userMessages]);
+
+    const [sendMessage] = useMutation(ADD_MESSAGE, {
+        refetchQueries: [QUERY_ME], // Refetch user data to update messages
+    });
+
+    const handleSendMessage = async () => {
+        if (newMessage.trim() !== "" && selectedContact) {
+            await sendMessage({
+                variables: { content: newMessage, receiverId: selectedContact.id },
+            });
+            setNewMessage("");
+        }
     };
 
-    // Call the fetchMessages function
-    fetchMessages();
-  }, []);
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error! {error.message}</p>;
 
-  const sendMessage = async () => {
-    if (message.trim() !== '') {
-      try {
-        // Make a POST request to send the message
-        await axios.post('/api/messages', { text: message });
-        // Clear the input field after sending the message
-        setMessage('');
-        // Fetch updated messages after sending a new message
-        fetchMessages();
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    }
-  };
-
-  return (
-    <div>
-      <h1>Chat</h1>
-      <div>
-        {/* Displaying messages */}
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <p>{msg.text}</p>
-          </div>
-        ))}
-      </div>
-      {/* Input field for sending messages */}
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your message..."
-      />
-      {/* Button to send messages */}
-      <button onClick={sendMessage}>Send</button>
-    </div>
-  );
+    return (
+        <div>
+            <div>
+                <h2>Contacts</h2>
+                <ul>
+                    {contacts.map((contact) => (
+                        <li key={contact._id} onClick={() => setSelectedContact(contact)}>
+                            {contact.username}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div>
+                <h2>Messages</h2>
+                {messages.length ? (
+                    <ul>
+                        {messages.map((message) => (
+                            <li key={message._id}>{message.originalContent} - {message.translationContent}</li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No recent messages</p>
+                )}
+            </div>
+            <div>
+                <textarea
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type your message here..."
+                />
+                <button onClick={handleSendMessage}>Send</button>
+            </div>
+        </div>
+    );
 };
 
 export default Chat;

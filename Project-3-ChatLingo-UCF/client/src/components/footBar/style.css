@@ -2,11 +2,12 @@
     position: fixed;
     bottom: 0;
     width: 100%;
+    max-height: 5vh;
     background-color: #333;
     color: white;
     text-align: center;
     padding: 10px;
-    font-size: 1.5em;
+    font-size: 5em;
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     z-index: 100;

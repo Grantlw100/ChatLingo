@@ -5,33 +5,43 @@ import Auth from '../utils/auth.js';
 import { ADD_USER } from '../utils/mutations.js';
 
 function Signup(props) {
-  const [formState, setFormState] = useState({ email: '', password: '' });
-  const [addUser] = useMutation(ADD_USER);
+  const [formState, setFormState] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    colorTheme: 'light', // Assuming 'light' as a default value
+    languageCode: 'en', // Assuming this will be set by the user; otherwise, set a default
+  });
+  
+  const [addUser, { loading, error }] = useMutation(ADD_USER);
+  const [errors, setErrors] = useState({});
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const mutationResponse = await addUser({
-      variables: {
-        email: formState.email,
-        password: formState.password,
-        firstName: formState.firstName,
-        lastName: formState.lastName,
-        username: formState.username,
-        phone: formState.phone,
-        Language: formState.language
 
-      },
-    });
-    const token = mutationResponse.data.addUser.token;
-    Auth.login(token);
+    setErrors({});
+    try {
+      const mutationResponse = await addUser({
+        variables: { ...formState },
+      });
+      console.log(mutationResponse);
+      const token = mutationResponse.data.addUser.token;
+      Auth.login(token);
+      console.log('Successfully signed up!');
+    } catch (e) {
+      console.error('Error signing up:', e);
+    }
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       [name]: value,
-    });
+    }));
   };
 
   const verifyPassword = () => {
@@ -41,6 +51,10 @@ function Signup(props) {
       return false;
     }
   };
+
+  if (loading) return <p>Loading...</p>; // Loading state handling
+  if (error) return <p>An error occurred during signup: {error.message}</p>; // Error state handling
+
 
   return (
     <div className="container my-1">
@@ -88,6 +102,7 @@ function Signup(props) {
             onChange={handleChange}
           />
         </div>
+        <p>Passwword must contain at least one letter, one number and must be 8 characters long.</p>
         <div className="flex-row space-between my-2">
           <label htmlFor="pwd">Password:</label>
           <input
@@ -95,9 +110,7 @@ function Signup(props) {
             name="password"
             type="password"
             id="pwd"
-            onChange={
-              verifyPassword() ? handleChange : () => console.log('Passwords do not match!')
-            }
+            onChange={handleChange}
           />
         </div>
         <div className="flex-row space-between my-2">
@@ -109,22 +122,13 @@ function Signup(props) {
             id="confirmPwd"
             onChange={handleChange}
           />
+          {errors.confirmPassword && <div style={{ color: 'red' }}>{errors.confirmPassword}</div>}
         </div>
         <div className="flex-row space-between my-2">
-            <label htmlFor="phone">Phone:</label>
-            <input
-                placeholder="123-456-7890"
-                name="phone"
-                type="phone"
-                id="phone"
-                onChange={handleChange}
-            />
-        </div>
-        <div className="flex-row space-between my-2">
-            <label htmlFor="Desired Language">Choose your Primary Language:</label>
+            <label htmlFor="languageCode">Choose your Primary Language:</label>
             <select
-                name="language"
-                id="language"
+                name="languageCode"
+                id="languageCode"
                 onChange={handleChange}
             >
                 <option value="en">English</option>
@@ -137,6 +141,17 @@ function Signup(props) {
                 <option value="pt">Portuguese</option>
                 <option value="ru">Russian</option>
                 <option value="zh">Chinese</option>
+            </select>
+        </div>
+        <div className="flex-row space-between my-2">
+            <label htmlFor="color-theme">Choose your Color Theme:</label>
+            <select
+                name="colorTheme"
+                id="color-theme"
+                onChange={handleChange}
+            >
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
             </select>
         </div>
         <div className="flex-row space-between my-2">

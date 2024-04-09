@@ -32,12 +32,6 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
-        validate: {
-            validator: function(v) {
-                return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(v);
-            },
-            message: props => `${props.value} is not a valid password!`
-        },
     },
     groups: [
         {
@@ -69,15 +63,15 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Language',
     },
-    notification: {
-        type: Schema.Types.ObjectId,
-        ref: 'Notification',
-    },
+    notifications: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Notification',
+        }
+    ]
 }, {
     timestamps: true,
     });
-
-const User = mongoose.model('User', userSchema);
 
 userSchema.pre('save', async function(next) {
     if (this.isNew || this.isModified('password')) {
@@ -88,7 +82,14 @@ userSchema.pre('save', async function(next) {
 });
 
 userSchema.methods.isCorrectPassword = async function(password) {
-    return await bcrypt.compare(password, this.password);
+    
+  console.log("Comparing password:", password);
+    const result = await bcrypt.compare(password, this.password);
+    console.log("Result:", result);
+    return result
 };
 
-module.exports = User;
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User; 

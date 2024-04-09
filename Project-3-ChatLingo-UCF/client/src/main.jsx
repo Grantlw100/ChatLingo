@@ -12,6 +12,8 @@ import About from './pages/about';
 import Logout from './pages/logout';
 import Help from './pages/help';
 import ChatApp from './pages/react'
+import OtherProfile from './pages/otherProfile.jsx'
+import ContactList from './pages/contactList.jsx';
 
 
 const router = createBrowserRouter([
@@ -35,6 +37,9 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <Profile />
       }, {
+        path: `/OtherProfile/:username`,
+        element: <OtherProfile />
+      }, {
         path: '/chat',
         element: <Chat />
       }, {
@@ -49,6 +54,9 @@ const router = createBrowserRouter([
       }, {
         path: '/help',
         element: <Help />
+      }, {
+        path: '/contactList',
+        element: <ContactList />
       }
     ]
   }

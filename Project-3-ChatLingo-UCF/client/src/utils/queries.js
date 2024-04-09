@@ -11,6 +11,10 @@ export const QUERY_ME = gql`
       groups {
         _id
         name
+        rooms {
+          _id
+          name
+        }
         users {
           _id
           username
@@ -39,6 +43,10 @@ export const QUERY_ME = gql`
       }
       notifications {
         _id
+        room {
+          _id
+          name
+        }
         message {
           _id
           originalContent
@@ -62,12 +70,18 @@ export const QUERY_ME = gql`
       }
       translations {
         _id
-        senderDesiredLanguage
+        senderDesiredLanguage {
+          name
+          code
+        }
         senderId {
           _id
           username
         }
-        receiverDesiredLanguage
+        receiverDesiredLanguage {
+          name
+          code
+        }
         receiverId {
           _id
           username
@@ -75,6 +89,23 @@ export const QUERY_ME = gql`
         translationMessage
         timestamp
       }
+      contactList {
+        _id
+        user {
+          _id
+          username
+        }
+        contacts {
+          _id
+          username
+        }
+      }
+      language {
+        name
+        code
+        flag
+      }
+      colorTheme
     }
   }
 `;
@@ -85,6 +116,11 @@ export const QUERY_USER = gql`
       _id
       username
       email
+      language {
+        name
+        code
+        flag
+      }
       groups {
         _id
         name
@@ -95,12 +131,18 @@ export const QUERY_USER = gql`
       }
       translations {
         _id
-        senderDesiredLanguage
+        senderDesiredLanguage {
+          name
+          code
+        }
         senderId {
           _id
           username
         }
-        receiverDesiredLanguage
+        receiverDesiredLanguage {
+          name
+          code
+        }
         receiverId {
           _id
           username

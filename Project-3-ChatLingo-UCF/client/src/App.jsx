@@ -30,12 +30,15 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+
 function App() {
   return (
     <ApolloProvider client={client}>
-      <div>
+      <div className='app-container' >
         <Nav />
+        <div className="content-container">
         <Outlet />
+        </div>
         <FootBar />
       </div>
     </ApolloProvider>

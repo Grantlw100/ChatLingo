@@ -5,6 +5,36 @@
   text-align: center;
 }
 
+/* App.css */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+.content-container {
+  flex: 1;
+  min-height: 80vh;
+  position: relative;
+}
+
+.bg-home, .bg-about, .bg-contact, .bg-projects {
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+
+@media (max-width: 1024px) {
+  .site-header, nav ul {
+      flex-direction: column;
+  }
+}
+
+
+
+
 .logo {
   height: 6em;
   padding: 1.5em;
